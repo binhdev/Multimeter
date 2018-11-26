@@ -3,4 +3,5 @@
 
     <string name="ch1_label_name">CH1</string>
     <string name="label_volt_input">Vin</string>
+    <string name="label_notconnected">Not connected</string>
 </resources>

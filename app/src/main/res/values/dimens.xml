@@ -9,7 +9,9 @@
 
 
     <dimen name="layout_margin">10.0dip</dimen>
-    <dimen name="main_button_size">200.0dip</dimen>
+    <dimen name="main_button_size">180.0dip</dimen>
+    <dimen name="btn_size">48.0dip</dimen>
+    <dimen name="btn_width">64.0dip</dimen>
 </resources>
 
 
