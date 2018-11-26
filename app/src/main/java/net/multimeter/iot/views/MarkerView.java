@@ -17,35 +17,20 @@ import android.widget.RelativeLayout.LayoutParams;
 import net.multimeter.iot.R;
 
 public class MarkerView extends View {
-    /* renamed from: a */
     float mMarginX;
-    /* renamed from: b */
     float mMarginY;
-    /* renamed from: c */
     Point mPointMarker;
-    /* renamed from: d */
     int mZeroX;
-    /* renamed from: e */
     String mText;
-    /* renamed from: f */
     protected int fX;
-    /* renamed from: g */
     protected int fY;
-    /* renamed from: h */
     MarkerViewListener mMarkerViewListner;
-    /* renamed from: i */
     int mMarketColor;
-    /* renamed from: j */
     Paint mPaint;
-    /* renamed from: k */
     protected Point mPointZero;
-    /* renamed from: l */
     private Paint mPaintMarker;
-    /* renamed from: m */
     private Rect mRect;
-    /* renamed from: n */
     private int mMarkerPosition;
-    /* renamed from: o */
     private int mNotfound;
 
     public MarkerView(Context context) {
@@ -81,7 +66,6 @@ public class MarkerView extends View {
         }
     }
 
-    /* renamed from: a */
     private static float resizeText(Paint paint, Rect rect, String str) {
         paint.setTextSize(48.0f);
         Rect rect2 = new Rect();
@@ -89,7 +73,6 @@ public class MarkerView extends View {
         return Math.min((((float) rect.width()) * 48.0f) / ((float) rect2.width()), (((float) rect.height()) * 48.0f) / ((float) rect2.height()));
     }
 
-    /* renamed from: c */
     private void drawText(Canvas canvas) {
         Rect rect = new Rect(0, 0, canvas.getWidth(), canvas.getHeight());
         this.mPaint.setTextSize(resizeText(this.mPaint, rect, this.mText) * 0.5f);
@@ -101,7 +84,6 @@ public class MarkerView extends View {
         canvas.drawText(this.mText, rectF.left, rectF.top - this.mPaint.ascent(), this.mPaint);
     }
 
-    /* renamed from: a */
     void drawRect(Canvas canvas) {
         this.mPaintMarker.setColor(this.mMarketColor);
         Path path = new Path();
@@ -113,7 +95,6 @@ public class MarkerView extends View {
         canvas.drawPath(path, this.mPaintMarker);
     }
 
-    /* renamed from: b */
     void drawTriangle(Canvas canvas) {
         this.mPaintMarker.setColor(this.mMarketColor);
         Path path = new Path();
