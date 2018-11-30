@@ -1,4 +1,4 @@
-package net.multimeter.iot.network.helper;
+package net.multimeter.iot.adc.helper;
 
 public class ByteConverter {
     private static short byteToShort(byte hight, byte low){

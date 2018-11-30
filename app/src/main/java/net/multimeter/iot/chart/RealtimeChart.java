@@ -236,27 +236,27 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
 
             if(spanX > spanY){
                 if(scaleFactor > 1){
-                    if(mTimeBase > 10) return;
-                    mTimeBase += 1;
-                }else{
-                    if(mTimeBase <= 1) return;
+                    if(mTimeBase == 0) return;
                     mTimeBase -= 1;
+                }else{
+                    if(mTimeBase > TimeBase.size() - 1) return;
+                    mTimeBase += 1;
                 }
                 eTimeBase = TimeBase.from(mTimeBase);
-                mZoomAction.scaleTime(eTimeBase.toString());
+                mZoomAction.scaleTime(eTimeBase);
             }else{
                 /**
                  * Horizontal zoom - scale value
                  */
                 if(scaleFactor > 1){
-                    if(mVoltBase > 9) return;
-                    mVoltBase += 1;
-                }else{
-                    if(mVoltBase <= 1) return;
+                    if(mVoltBase == 0) return;
                     mVoltBase -= 1;
+                }else{
+                    if(mVoltBase > VoltBase.size() - 1) return;
+                    mVoltBase += 1;
                 }
                 eVoltBase = VoltBase.from(mVoltBase);
-                mZoomAction.scaleValue(eVoltBase.toString());
+                mZoomAction.scaleValue(eVoltBase);
             }
 
         }
@@ -267,7 +267,7 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public interface IZoomAction {
-        void scaleValue(String value);
-        void scaleTime(String value);
+        void scaleValue(VoltBase voltBase);
+        void scaleTime(TimeBase timeBase);
     }
 }

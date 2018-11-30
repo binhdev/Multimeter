@@ -178,10 +178,7 @@ public class MarkerView extends View {
                 this.fY = rawY - layoutParams.topMargin;
                 break;
             case MotionEvent.ACTION_UP:
-                if (this.mMarkerViewListner != null) {
-                    this.mMarkerViewListner.onMarkerTouchUp(this);
-                    break;
-                }
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 layoutParams = (LayoutParams) getLayoutParams();
@@ -200,6 +197,10 @@ public class MarkerView extends View {
                     layoutParams.topMargin = 0;
                 }
                 setLayoutParams(layoutParams);
+                if (this.mMarkerViewListner != null) {
+                    this.mMarkerViewListner.onMarkerTouchMove(this);
+                    break;
+                }
                 break;
             default:
                 break;
@@ -211,7 +212,7 @@ public class MarkerView extends View {
         this.mMarketColor = i;
     }
 
-    public void setTouchUpListener(MarkerViewListener MarkerViewListener) {
+    public void setTouchMoveListener(MarkerViewListener MarkerViewListener) {
         this.mMarkerViewListner = MarkerViewListener;
     }
 }

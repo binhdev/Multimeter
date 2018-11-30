@@ -6,14 +6,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import net.multimeter.iot.R;
+import net.multimeter.iot.adc.data.AdcData;
 import net.multimeter.iot.chart.RealtimeChart;
 import net.multimeter.iot.chart.components.XAxis;
 import net.multimeter.iot.chart.components.YAxis;
 import net.multimeter.iot.chart.data.Entry;
+import net.multimeter.iot.chart.units.TimeBase;
+import net.multimeter.iot.chart.units.VoltBase;
 import net.multimeter.iot.chart.utils.Helper;
 import net.multimeter.iot.chart.utils.Utils;
-import net.multimeter.iot.network.producer.DataProcessor;
-import net.multimeter.iot.network.producer.UdpUnicastClient;
+import net.multimeter.iot.adc.producer.DataProcessor;
+import net.multimeter.iot.adc.producer.UdpUnicastClient;
 import net.multimeter.iot.utils.Constants;
 import net.multimeter.iot.views.ZeroLine;
 
@@ -53,6 +56,9 @@ public class GraphActivity extends BaseActivity {
     @BindView(R.id.tv_timebase)
     public TextView tvTime;
 
+    private VoltBase eVoltBase = VoltBase.VDIV_1V;
+    private TimeBase eTimeBase = TimeBase.HDIV_1S;
+
     /**
      *
      */
@@ -64,7 +70,7 @@ public class GraphActivity extends BaseActivity {
 
     UdpUnicastClient client;
     DataProcessor dataProcessor;
-    BlockingQueue<byte[]> messageQueue;
+    AdcData mAdcData;
 
     ExecutorService mExecutorService = Executors.newFixedThreadPool(2);
 
@@ -81,26 +87,26 @@ public class GraphActivity extends BaseActivity {
         mXAxis = mRealtimeChart.getXAxis();
         mYAxis = mRealtimeChart.getYAxis();
 
-        mAmplitudeLow.setTouchUpListener(view -> {
+        mAmplitudeLow.setTouchMoveListener(view -> {
            mYAxis.getLowLimitLine().setYoffset(view.getTop() + view.getHeight() / 2);
         });
 
-        mAmplitudeHigh.setTouchUpListener(view -> {
+        mAmplitudeHigh.setTouchMoveListener(view -> {
             mYAxis.getHighLimitLine().setYoffset(view.getTop() + view.getHeight() / 2);
         });
 
-        mTimeLineLow.setTouchUpListener(view -> {
+        mTimeLineLow.setTouchMoveListener(view -> {
             mXAxis.getLowLimitLine().setXoffset(view.getLeft() + view.getWidth()/2);
         });
 
-        mTimeLineHigh.setTouchUpListener(view -> {
+        mTimeLineHigh.setTouchMoveListener(view -> {
             mXAxis.getHighLimitLine().setXoffset(view.getLeft() + view.getWidth()/2);
         });
 
         List<Entry> entryList = new ArrayList<>();
-        messageQueue = new ArrayBlockingQueue<>(Constants.QUEUE_CAPACITY);
-        client = new UdpUnicastClient(Constants.SERVER_PORT, messageQueue);
-        dataProcessor = new DataProcessor(messageQueue, dataPoints -> {
+        mAdcData = new AdcData(eVoltBase, eTimeBase);
+        client = new UdpUnicastClient(Constants.SERVER_PORT, mAdcData);
+        dataProcessor = new DataProcessor(mAdcData, dataPoints -> {
             entryList.clear();
             for (PointF point : dataPoints) {
                 Entry entry = new Entry(point.x, value((int)point.y));
@@ -112,13 +118,15 @@ public class GraphActivity extends BaseActivity {
 
         mRealtimeChart.setZoomActionListener(new RealtimeChart.IZoomAction() {
             @Override
-            public void scaleValue(String value) {
-                tvValue.setText(Helper.formatValue(value, ""));
+            public void scaleValue(VoltBase value) {
+                mAdcData.setVoltBase(value);
+                tvValue.setText(Helper.formatValue(value.toString() + ":" + value.getVoltValue(), ""));
             }
 
             @Override
-            public void scaleTime(String value) {
-                tvTime.setText(Helper.formatTime(value, ""));
+            public void scaleTime(TimeBase value) {
+                mAdcData.setTimeBase(value);
+                tvTime.setText(Helper.formatTime(value.toString() + ":" + value.getTimeValue(), ""));
             }
 
         });

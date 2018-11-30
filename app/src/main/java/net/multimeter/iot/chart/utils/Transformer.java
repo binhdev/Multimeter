@@ -62,11 +62,11 @@ public class Transformer {
     }
 
     public float voltToPixel(float value, VoltBase voltBase) {
-        return value / Utils.getVoltValue(voltBase) * pixelPerValueUnit();
+        return value / voltBase.getVoltValue() * pixelPerValueUnit();
     }
 
     public float pixelToVolt(float value, VoltBase voltBase) {
-        return value / pixelPerValueUnit() * Utils.getVoltValue(voltBase);
+        return value / pixelPerValueUnit() * voltBase.getVoltValue();
     }
 
     private float pixelPerValueUnit() {
@@ -74,11 +74,11 @@ public class Transformer {
     }
 
     public float timeToPixel(float value, TimeBase timeBase) {
-        return value / Utils.getTimeValue(timeBase) * pixelPerTimeUnit();
+        return value / timeBase.getTimeValue() * pixelPerTimeUnit();
     }
 
     public float pixelToTime(float value, TimeBase timeBase) {
-        return value / pixelPerTimeUnit() * Utils.getTimeValue(timeBase);
+        return value / pixelPerTimeUnit() * timeBase.getTimeValue();
     }
 
     private float pixelPerTimeUnit() {
@@ -86,7 +86,7 @@ public class Transformer {
     }
 
     public float distanceBetweenPoints(TimeBase timeBase) {
-        return pixelPerTimeUnit() / Constants.NUMBER_POINT_PER_SECOND / Utils.getTimeValue(timeBase);
+        return pixelPerTimeUnit() / Constants.NUMBER_POINT_PER_SECOND / timeBase.getTimeValue();
     }
 
 }

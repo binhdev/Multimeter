@@ -1,22 +1,23 @@
-package net.multimeter.iot.network.producer;
+package net.multimeter.iot.adc.producer;
 
 import android.util.Log;
 
+import net.multimeter.iot.adc.data.AdcData;
+import net.multimeter.iot.adc.helper.ByteConverter;
 import net.multimeter.iot.utils.Constants;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.concurrent.BlockingQueue;
 
 public class UdpUnicastClient implements Runnable {
     private final int port;
-    private final BlockingQueue<byte[]> messageQue;
+    private final AdcData mAdcData;
 
-    public UdpUnicastClient(int port, BlockingQueue<byte[]> messageQue) {
+    public UdpUnicastClient(int port, AdcData adcData) {
         this.port = port;
-        this.messageQue = messageQue;
+        mAdcData = adcData;
     }
 
     @Override
@@ -28,15 +29,12 @@ public class UdpUnicastClient implements Runnable {
                 DatagramPacket datagramPacket = new DatagramPacket(buffer, 0, buffer.length);
 
                 clientSocket.receive(datagramPacket);
-                this.messageQue.put(datagramPacket.getData());
-                Log.e("messageQue Size: ", messageQue.size() + "");
+                mAdcData.add(ByteConverter.byteToShort(datagramPacket.getData()));
             }
         }catch (SocketException e){
             Log.e("SocketException: ", e.toString());
         }catch (IOException e){
             Log.e("IOException: ", e.toString());
-        }catch (InterruptedException e){
-            Log.e("InterruptedException: ", e.toString());
         }
     }
 }

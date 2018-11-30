@@ -17,6 +17,7 @@ public enum TimeBase {
     HDIV_2S(10),
     HDIV_5S(11);
 
+    private static final float timeValues[] = {0.001f, 0.002f, 0.005f, 0.01f, 0.02f, 0.05f, 0.1f, 0.2f, 0.5f, 1f, 2f, 5f};
     /* renamed from: I */
     private static TimeBase[] values;
     /* renamed from: J */
@@ -35,6 +36,10 @@ public enum TimeBase {
         return this.mValue;
     }
 
+    public float getTimeValue() {
+        return timeValues[mValue];
+    }
+
     private static final Map<Integer, TimeBase> _map = new HashMap<>();
     static
     {
@@ -48,8 +53,10 @@ public enum TimeBase {
      * @return Difficulty
      */
     public static TimeBase from(int value) {
-        if(value > 11  || value < 0)
-            value = 0;
         return _map.get(value);
+    }
+
+    public static int size() {
+        return values().length;
     }
 }

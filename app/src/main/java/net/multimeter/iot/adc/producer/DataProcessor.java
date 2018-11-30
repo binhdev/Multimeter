@@ -1,13 +1,10 @@
-package net.multimeter.iot.network.producer;
+package net.multimeter.iot.adc.producer;
 
 import android.graphics.PointF;
-
-import net.multimeter.iot.network.helper.ByteConverter;
-
-import java.util.concurrent.BlockingQueue;
+import net.multimeter.iot.adc.data.AdcData;
 
 public class DataProcessor implements Runnable {
-    private final BlockingQueue<byte[]> messageQueue;
+    private AdcData mAdcData;
 
     public interface DataReceiverListener{
         void receive(PointF[] dataPoints);
@@ -15,8 +12,8 @@ public class DataProcessor implements Runnable {
 
     DataReceiverListener listener;
 
-    public DataProcessor(BlockingQueue<byte[]> messageQueue, DataReceiverListener listener) {
-        this.messageQueue = messageQueue;
+    public DataProcessor(AdcData adcData, DataReceiverListener listener) {
+        mAdcData = adcData;
         this.listener = listener;
     }
 
@@ -24,8 +21,7 @@ public class DataProcessor implements Runnable {
     public void run() {
         while (true){
             try {
-                byte[] rawData = this.messageQueue.take();
-                short[] values = ByteConverter.byteToShort(rawData);
+                short values[] = mAdcData.get();
                 PointF dataPoints[] = new PointF[values.length];
 
                 short i = 0;
@@ -36,7 +32,7 @@ public class DataProcessor implements Runnable {
                 }
                 listener.receive(dataPoints);
 
-                Thread.sleep(20);
+                Thread.sleep(15);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
