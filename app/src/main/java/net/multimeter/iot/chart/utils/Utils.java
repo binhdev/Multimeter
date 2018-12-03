@@ -16,7 +16,7 @@ public class Utils {
     private static DisplayMetrics mDisplayMetrics;
 
     public static void init(Context context) {
-        if (context == null) {
+        if (context != null) {
             Resources res = context.getResources();
             mDisplayMetrics = res.getDisplayMetrics();
         }
@@ -52,6 +52,10 @@ public class Utils {
 
     public static float convertDataToVolt(int value) {
         return value / Constants.MAX_VALUE_VOLT * Constants.MAX_VOLT;
+    }
+
+    public static int getAmountPointFromXAxisScale(float scale) {
+        return (int)(Constants.NUMBER_POINT_PER_SECOND * scale) * ViewPortHandler.XAXIS_UNIT;
     }
 
     public static int getSDKInt() {

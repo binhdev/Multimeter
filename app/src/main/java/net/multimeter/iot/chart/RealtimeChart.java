@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -19,8 +18,6 @@ import net.multimeter.iot.chart.renderer.DataRenderer;
 import net.multimeter.iot.chart.renderer.HUDRenderer;
 import net.multimeter.iot.chart.renderer.XAxisRenderer;
 import net.multimeter.iot.chart.renderer.YAxisRenderer;
-import net.multimeter.iot.chart.units.TimeBase;
-import net.multimeter.iot.chart.units.VoltBase;
 import net.multimeter.iot.chart.utils.Transformer;
 import net.multimeter.iot.chart.utils.Utils;
 import net.multimeter.iot.chart.utils.ViewPortHandler;
@@ -51,30 +48,28 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
 
     private ScaleGestureDetector mScaleGestureDetector;
 
-    VoltBase eVoltBase = VoltBase.VDIV_1V;
-    TimeBase eTimeBase = TimeBase.HDIV_100mS;
-
     /**
      * mValue: Volt, Omega
      * mTime: time
      */
-    private int mVoltBase = eVoltBase.value();
-    private int mTimeBase = eTimeBase.value();
 
-    IZoomAction mZoomAction;
+    IScaleListener mScaleListener;
+    private Context mContext;
 
     public RealtimeChart(Context context) {
         super(context);
+        mContext = context;
         init();
     }
 
     public RealtimeChart(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
         init();
     }
 
     private void init() {
-        Utils.init(getContext());
+        Utils.init(mContext);
 
         mSurfaceHolder = getHolder();
         mSurfaceHolder.addCallback(this);
@@ -165,17 +160,21 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private void renderData(Canvas canvas) {
-        mDataRenderer.transform(mTransformer, eVoltBase, eTimeBase);
+//        mDataRenderer.translate(100);
         mDataRenderer.renderData(canvas);
+    }
+
+    public void start() {
+
     }
 
     private void updateHUD(){
         List<String> values = new ArrayList<>();
-        float time = mTransformer.calculateTime(mXAxis.getHighLimitLine().getXoffset(), mXAxis.getLowLimitLine().getXoffset(), eTimeBase);
-        float volt = mTransformer.calculateVolt(mYAxis.getHighLimitLine().getYoffset(), mYAxis.getLowLimitLine().getYoffset(), eVoltBase);
-        values.add("CH1 - Volt: " + volt );
-        values.add("CH1 - Time: " + time);
-        values.add("CH1: 100mv");
+//        float time = mTransformer.calculateTime(mXAxis.getHighLimitLine().getXoffset(), mXAxis.getLowLimitLine().getXoffset(), eTimeBase);
+//        float volt = mTransformer.calculateVolt(mYAxis.getHighLimitLine().getYoffset(), mYAxis.getLowLimitLine().getYoffset(), eVoltBase);
+//        values.add("CH1 - Volt: " + volt );
+//        values.add("CH1 - Time: " + time);
+//        values.add("CH1: 100mv");
         mHudAmplitude.setValues(values);
     }
 
@@ -194,6 +193,7 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
     public void setData(List<Entry> data) {
         mData.clear();
         mData.addAll(data);
+        mDataRenderer.transform(mTransformer, mXAxis.getScale(), mYAxis.getScale());
     }
 
     @Override
@@ -231,43 +231,37 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
             /**
              * Vertical zoom - scale time
              */
-            if(mZoomAction == null)
+            if(mScaleListener == null)
                 return;
 
             if(spanX > spanY){
                 if(scaleFactor > 1){
-                    if(mTimeBase == 0) return;
-                    mTimeBase -= 1;
+                    mXAxis.down();
                 }else{
-                    if(mTimeBase > TimeBase.size() - 1) return;
-                    mTimeBase += 1;
+                    mXAxis.up();
                 }
-                eTimeBase = TimeBase.from(mTimeBase);
-                mZoomAction.scaleTime(eTimeBase);
+                mScaleListener.scaleX(mXAxis.getScale());
             }else{
                 /**
                  * Horizontal zoom - scale value
                  */
                 if(scaleFactor > 1){
-                    if(mVoltBase == 0) return;
-                    mVoltBase -= 1;
+                    mYAxis.down();
                 }else{
-                    if(mVoltBase > VoltBase.size() - 1) return;
-                    mVoltBase += 1;
+                    mYAxis.up();
                 }
-                eVoltBase = VoltBase.from(mVoltBase);
-                mZoomAction.scaleValue(eVoltBase);
+                mScaleListener.scaleY(mYAxis.getScale());
             }
 
         }
     }
 
-    public void setZoomActionListener(IZoomAction zoomAction) {
-        mZoomAction = zoomAction;
+    public void setScaleListener(IScaleListener listener) {
+        mScaleListener = listener;
     }
 
-    public interface IZoomAction {
-        void scaleValue(VoltBase voltBase);
-        void scaleTime(TimeBase timeBase);
+    public interface IScaleListener {
+        void scaleY(float scale);
+        void scaleX(float scale);
     }
 }

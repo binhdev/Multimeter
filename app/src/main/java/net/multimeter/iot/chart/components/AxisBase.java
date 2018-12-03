@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 
 public abstract class AxisBase extends ComponentBase {
+
     private int mGridColor = Color.WHITE;
     private float mGridLineWidth = 1.0f;
 
@@ -12,6 +13,9 @@ public abstract class AxisBase extends ComponentBase {
 
     protected LimitLine mLowLimitLine;
     protected LimitLine mHighLimitLine;
+
+    protected float scale[] = {1.0f} ;
+    protected int scaleIndex = 0;
 
     protected boolean mDrawLabels = true;
 
@@ -85,5 +89,28 @@ public abstract class AxisBase extends ComponentBase {
 
     public DashPathEffect getLimitLineDashedLine(){
         return mLimitLineDashPathEffect;
+    }
+
+    public void setScaleRange(float range[]){
+        scaleIndex = 0;
+        scale = range;
+    }
+
+    public void setScaleIndex(int index) {
+        scaleIndex = index;
+    }
+
+    public float getScale() {
+        return scale[scaleIndex];
+    }
+
+    public void up() {
+        if(scaleIndex < scale.length - 1)
+            scaleIndex++;
+    }
+
+    public void down() {
+        if(scaleIndex > 0)
+            scaleIndex--;
     }
 }

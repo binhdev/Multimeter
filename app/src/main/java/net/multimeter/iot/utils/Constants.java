@@ -1,9 +1,6 @@
 package net.multimeter.iot.utils;
 
 public class Constants {
-    static double[] TIME_FRAME = new double[]{
-            15.0d, 20.0d, 50.0d
-    };
 
     public static int DATA_BUFFER = 4096;
     public static int QUEUE_CAPACITY = 10;

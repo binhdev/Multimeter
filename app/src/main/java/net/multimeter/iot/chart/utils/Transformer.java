@@ -2,12 +2,8 @@ package net.multimeter.iot.chart.utils;
 
 import android.graphics.Matrix;
 import android.graphics.Path;
-import android.util.Log;
 
 import net.multimeter.iot.chart.data.Entry;
-import net.multimeter.iot.chart.units.TimeBase;
-import net.multimeter.iot.chart.units.VoltBase;
-
 import java.util.List;
 
 public class Transformer {
@@ -51,42 +47,42 @@ public class Transformer {
 
     }
 
-    public float calculateVolt(float lower, float higher, VoltBase voltBase){
+    public float calculateVolt(float lower, float higher, float scale){
         float distance = Math.abs(higher - lower);
-        return pixelToVolt(distance, voltBase);
+        return pixelToYAxisValue(distance, scale);
     }
 
-    public float calculateTime(float lower, float higher, TimeBase timeBase){
+    public float calculateTime(float lower, float higher, float scale){
         float distance = Math.abs(higher - lower);
-        return pixelToTime(distance, timeBase);
+        return xAxisValueToPixel(distance, scale);
     }
 
-    public float voltToPixel(float value, VoltBase voltBase) {
-        return value / voltBase.getVoltValue() * pixelPerValueUnit();
+    public float yAxisValueToPixel(float value, float scale) {
+        return value / scale * pixelPerYAxisUnit();
     }
 
-    public float pixelToVolt(float value, VoltBase voltBase) {
-        return value / pixelPerValueUnit() * voltBase.getVoltValue();
+    public float pixelToYAxisValue(float value, float scale) {
+        return value / pixelPerYAxisUnit() * scale;
     }
 
-    private float pixelPerValueUnit() {
+    private float pixelPerYAxisUnit() {
         return mViewPortHandler.getChartHeight() / mViewPortHandler.YAXIS_UNIT;
     }
 
-    public float timeToPixel(float value, TimeBase timeBase) {
-        return value / timeBase.getTimeValue() * pixelPerTimeUnit();
+    public float xAxisValueToPixel(float value, float scale) {
+        return value / scale * pixelPerXAxisUnit();
     }
 
-    public float pixelToTime(float value, TimeBase timeBase) {
-        return value / pixelPerTimeUnit() * timeBase.getTimeValue();
+    public float pixelToXAxisValue(float value, float scale) {
+        return value / pixelPerXAxisUnit() * scale;
     }
 
-    private float pixelPerTimeUnit() {
+    private float pixelPerXAxisUnit() {
         return mViewPortHandler.getChartWidth() / mViewPortHandler.XAXIS_UNIT;
     }
 
-    public float distanceBetweenPoints(TimeBase timeBase) {
-        return pixelPerTimeUnit() / Constants.NUMBER_POINT_PER_SECOND / timeBase.getTimeValue();
+    public float distanceBetweenPoints(float scale) {
+        return pixelPerXAxisUnit() / (Constants.NUMBER_POINT_PER_SECOND * scale);
     }
 
 }

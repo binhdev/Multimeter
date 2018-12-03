@@ -8,12 +8,12 @@ import android.util.Log;
 
 import net.multimeter.iot.chart.data.Entry;
 import net.multimeter.iot.chart.interfaces.IChart;
-import net.multimeter.iot.chart.units.TimeBase;
-import net.multimeter.iot.chart.units.VoltBase;
 import net.multimeter.iot.chart.utils.RTPointF;
 import net.multimeter.iot.chart.utils.Transformer;
 import net.multimeter.iot.chart.utils.Utils;
 import net.multimeter.iot.chart.utils.ViewPortHandler;
+
+import java.util.List;
 
 public class DataRenderer extends Renderer {
 
@@ -42,26 +42,42 @@ public class DataRenderer extends Renderer {
     }
 
     public void renderData(final Canvas canvas) {
+        List<Entry> listData = mChart.getData();
+        if(listData.size() == 0) return;
+
         Path path = new Path();
-        RTPointF firtDataPoint = RTPointF.getInstance(0, mViewPortHandler.getChartHeight()/ 2);
+        Entry first = listData.get(0);
+        RTPointF firtDataPoint = RTPointF.getInstance(first.getX(), mViewPortHandler.getChartHeight()/ 2 + first.getY());
         path.moveTo(firtDataPoint.x, firtDataPoint.y);
 
-        for (Entry entry : mChart.getData()) {
+        for (int i = 1; i < listData.size(); i++){
+            Entry entry = listData.get(i);
             path.lineTo(entry.getX(), mViewPortHandler.getChartHeight()/ 2 + entry.getY());
         }
 
         canvas.drawPath(path, mRenderPaint);
     }
 
-    public void transform(Transformer transformer, VoltBase voltBase, TimeBase timeBase) {
-        for (Entry entry : mChart.getData()) {
-            entry.setY(transformer.voltToPixel(entry.getY(), voltBase));
+    public void transform(Transformer transformer,float xScale, float yScale) {
+        List<Entry> listData = mChart.getData();
+        if(listData.size() == 0) return;
+        Entry first = listData.get(0);
+
+        for (int i = 1; i < listData.size(); i++){
+            Entry entry = listData.get(i);
+            entry.setX(first.getX() + (int)(i * transformer.distanceBetweenPoints(xScale)));
         }
 
-        for (int i = 1; i < mChart.getData().size(); i++){
-            Entry entry = mChart.getData().get(i);
-            entry.setX(entry.getX() + i * transformer.distanceBetweenPoints(timeBase));
+        for (Entry entry : listData) {
+            entry.setY(transformer.yAxisValueToPixel(entry.getY(), yScale));
         }
-        Log.e("distance", transformer.distanceBetweenPoints(timeBase) + "");
+    }
+
+    public void translate(float speed) {
+        List<Entry> listData = mChart.getData();
+        for (int i = 1; i < listData.size(); i++){
+            Entry entry = listData.get(i);
+            entry.setX(entry.getX() + speed);
+        }
     }
 }

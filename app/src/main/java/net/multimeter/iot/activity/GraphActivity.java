@@ -2,6 +2,7 @@ package net.multimeter.iot.activity;
 
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,7 +58,7 @@ public class GraphActivity extends BaseActivity {
     public TextView tvTime;
 
     private VoltBase eVoltBase = VoltBase.VDIV_1V;
-    private TimeBase eTimeBase = TimeBase.HDIV_1S;
+    private TimeBase eTimeBase = TimeBase.HDIV_200mS;
 
     /**
      *
@@ -83,9 +84,13 @@ public class GraphActivity extends BaseActivity {
     }
 
     private void init() {
+        Utils.init(getApplicationContext());
         ButterKnife.bind(this);
         mXAxis = mRealtimeChart.getXAxis();
+        mXAxis.setScaleRange(TimeBase.getRange());
+
         mYAxis = mRealtimeChart.getYAxis();
+        mYAxis.setScaleRange(VoltBase.getRange());
 
         mAmplitudeLow.setTouchMoveListener(view -> {
            mYAxis.getLowLimitLine().setYoffset(view.getTop() + view.getHeight() / 2);
@@ -104,7 +109,7 @@ public class GraphActivity extends BaseActivity {
         });
 
         List<Entry> entryList = new ArrayList<>();
-        mAdcData = new AdcData(eVoltBase, eTimeBase);
+        mAdcData = new AdcData();
         client = new UdpUnicastClient(Constants.SERVER_PORT, mAdcData);
         dataProcessor = new DataProcessor(mAdcData, dataPoints -> {
             entryList.clear();
@@ -116,26 +121,35 @@ public class GraphActivity extends BaseActivity {
             mRealtimeChart.notifityDataChange();
         });
 
-        mRealtimeChart.setZoomActionListener(new RealtimeChart.IZoomAction() {
+        mRealtimeChart.setScaleListener(new RealtimeChart.IScaleListener() {
+
             @Override
-            public void scaleValue(VoltBase value) {
-                mAdcData.setVoltBase(value);
-                tvValue.setText(Helper.formatValue(value.toString() + ":" + value.getVoltValue(), ""));
+            public void scaleY(float scale) {
+                eVoltBase = VoltBase.from(scale);
+                tvValue.setText(Helper.formatValue(eVoltBase.toString() + "", ""));
             }
 
             @Override
-            public void scaleTime(TimeBase value) {
-                mAdcData.setTimeBase(value);
-                tvTime.setText(Helper.formatTime(value.toString() + ":" + value.getTimeValue(), ""));
+            public void scaleX(float scale) {
+                eTimeBase = TimeBase.from(scale);
+                calculateTime();
+                tvTime.setText(Helper.formatTime(eTimeBase.toString()  + "", ""));
             }
 
         });
+    }
+
+    private void calculateTime() {
+        int amount = Utils.getAmountPointFromXAxisScale(eTimeBase.value());
+        dataProcessor.setAmount(amount);
     }
 
     private void start() {
         isRunning = true;
         mExecutorService.submit(client);
         mExecutorService.submit(dataProcessor);
+
+        mRealtimeChart.start();
     }
 
     public void onClickHandle(View view){

@@ -1,41 +1,39 @@
 package net.multimeter.iot.adc.data;
 
-import com.google.common.collect.EvictingQueue;
+import android.graphics.PointF;
 
-import net.multimeter.iot.chart.units.TimeBase;
-import net.multimeter.iot.chart.units.VoltBase;
+import com.google.common.collect.EvictingQueue;
 import net.multimeter.iot.chart.utils.Constants;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdcData {
 
-    private VoltBase eVoltBase;
-    private TimeBase eTimeBase;
-
     private EvictingQueue<Short> mFifoQueue;
+    private List<PointF> list = new ArrayList<>();
 
-    public AdcData(VoltBase voltBase, TimeBase timeBase) {
-        eVoltBase = voltBase;
-        eTimeBase = timeBase;
+    public AdcData() {
         mFifoQueue = EvictingQueue.create(Constants.QUEUE_BUFFER);
     }
 
     public void add(short[] values) {
         synchronized (mFifoQueue) {
-            for (short value : values) {
-                mFifoQueue.add(value);
+            for(int i = 0;  i < values.length; i++){
+                mFifoQueue.add(values[i]);
             }
         }
     }
 
-    public short[] get() {
-        int amount= 1000;
-        short[] values = new short[amount];
-        synchronized (mFifoQueue) {
-            for(int i=0; i < amount; i++){
-                values[i] = mFifoQueue.poll();
+    public List<PointF> get(int amount) {
+        list.clear();
+        if(mFifoQueue.size() > amount)
+            synchronized (mFifoQueue) {
+                for(int i = 0; i < amount; i++){
+                    list.add(new PointF(i, mFifoQueue.remove()));
+                }
             }
-        }
-        return values;
+        return list;
     }
 
     public int getSize() {
@@ -44,21 +42,5 @@ public class AdcData {
 
     public int getFreeSize() {
         return Constants.QUEUE_BUFFER - mFifoQueue.size();
-    }
-
-    public void setVoltBase(VoltBase voltBase) {
-        eVoltBase = voltBase;
-    }
-
-    public VoltBase getVoltBase() {
-        return eVoltBase;
-    }
-
-    public void setTimeBase(TimeBase timeBase) {
-        eTimeBase = timeBase;
-    }
-
-    public TimeBase getTimeBase() {
-        return eTimeBase;
     }
 }
