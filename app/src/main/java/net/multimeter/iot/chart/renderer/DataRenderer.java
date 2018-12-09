@@ -65,7 +65,7 @@ public class DataRenderer extends Renderer {
 
         for (int i = 1; i < listData.size(); i++){
             Entry entry = listData.get(i);
-            entry.setX(first.getX() + (int)(i * transformer.distanceBetweenPoints(xScale)));
+            entry.setX((int)(i * transformer.distanceBetweenPoints(xScale)));
         }
 
         for (Entry entry : listData) {

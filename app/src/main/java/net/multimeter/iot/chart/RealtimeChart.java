@@ -160,7 +160,6 @@ public class RealtimeChart extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private void renderData(Canvas canvas) {
-//        mDataRenderer.translate(100);
         mDataRenderer.renderData(canvas);
     }
 

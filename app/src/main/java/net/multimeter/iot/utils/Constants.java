@@ -2,7 +2,7 @@ package net.multimeter.iot.utils;
 
 public class Constants {
 
-    public static int DATA_BUFFER = 4096;
+    public static int DATA_BUFFER = 1600;
     public static int QUEUE_CAPACITY = 10;
     public static String SERVER_IP = "192.168.1.7";
     public static int SERVER_PORT = 50001;

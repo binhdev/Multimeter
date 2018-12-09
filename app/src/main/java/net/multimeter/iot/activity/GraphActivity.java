@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import net.multimeter.iot.R;
 import net.multimeter.iot.adc.data.AdcData;
+import net.multimeter.iot.adc.data.CircularBuffer;
+import net.multimeter.iot.adc.data.DataPoint;
 import net.multimeter.iot.chart.RealtimeChart;
 import net.multimeter.iot.chart.components.XAxis;
 import net.multimeter.iot.chart.components.YAxis;
@@ -71,7 +73,7 @@ public class GraphActivity extends BaseActivity {
 
     UdpUnicastClient client;
     DataProcessor dataProcessor;
-    AdcData mAdcData;
+    CircularBuffer circularBuffer;
 
     ExecutorService mExecutorService = Executors.newFixedThreadPool(2);
 
@@ -109,12 +111,13 @@ public class GraphActivity extends BaseActivity {
         });
 
         List<Entry> entryList = new ArrayList<>();
-        mAdcData = new AdcData();
-        client = new UdpUnicastClient(Constants.SERVER_PORT, mAdcData);
-        dataProcessor = new DataProcessor(mAdcData, dataPoints -> {
+        circularBuffer = new CircularBuffer(100000);
+        circularBuffer.setStep(100);
+        client = new UdpUnicastClient(Constants.SERVER_PORT, circularBuffer);
+        dataProcessor = new DataProcessor(circularBuffer, dataPoints -> {
             entryList.clear();
-            for (PointF point : dataPoints) {
-                Entry entry = new Entry(point.x, value((int)point.y));
+            for (DataPoint point : dataPoints) {
+                Entry entry = new Entry(point.index, value((int)point.value));
                 entryList.add(entry);
             }
             mRealtimeChart.setData(entryList);

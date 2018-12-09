@@ -1,22 +1,20 @@
 package net.multimeter.iot.adc.producer;
 
-import android.graphics.PointF;
-
-import net.multimeter.iot.adc.data.AdcData;
-import java.util.List;
+import net.multimeter.iot.adc.data.CircularBuffer;
+import net.multimeter.iot.adc.data.DataPoint;
 
 public class DataProcessor implements Runnable {
-    private AdcData mAdcData;
-    private int amount = 1;
+    private final CircularBuffer mCircularBuffer;
+    private int amount = 2400;
 
     public interface DataReceiverListener{
-        void receive(List<PointF> dataPoints);
+        void receive(DataPoint[] dataPoints);
     }
 
     DataReceiverListener listener;
 
-    public DataProcessor(AdcData adcData, DataReceiverListener listener) {
-        mAdcData = adcData;
+    public DataProcessor(CircularBuffer circularBuffer, DataReceiverListener listener) {
+        mCircularBuffer = circularBuffer;
         this.listener = listener;
     }
 
@@ -24,7 +22,7 @@ public class DataProcessor implements Runnable {
     public void run() {
         while (true){
             try {
-                listener.receive(mAdcData.get(amount));
+                listener.receive(mCircularBuffer.get(amount));
                 Thread.sleep(15);
             } catch (InterruptedException e) {
                 e.printStackTrace();
