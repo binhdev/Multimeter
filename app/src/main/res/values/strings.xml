@@ -4,4 +4,9 @@
     <string name="ch1_label_name">CH1</string>
     <string name="label_volt_input">Vin</string>
     <string name="label_notconnected">Not connected</string>
+
+    <!--Settings-->
+    <string name="lb_setting_connection">CONNECTIONS</string>
+    <string name="lb_setting_display">DISPLAY</string>
+    <string name="lb_setting_graph">GRAPH</string>
 </resources>

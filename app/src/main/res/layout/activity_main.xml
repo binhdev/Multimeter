@@ -22,37 +22,43 @@
             android:layout_gravity="center_horizontal"/>
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:background="@color/colorWhite"/>
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp">
+            android:layout_height="200dp"
+            android:orientation="vertical">
             <TextView
+                android:id="@+id/tv.main"
                 android:text="0.0"
                 android:textColor="@color/colorWhite"
                 android:textSize="72sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"/>
-        </RelativeLayout>
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="right|bottom"
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/dotted"
+                android:layerType="software" />
+            <TextView
+                android:id="@+id/tv.second"
+                android:text="0.0"
+                android:textColor="@color/colorWhite"
+                android:textSize="72sp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="right|bottom"
+                android:visibility="gone"/>
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:background="@color/colorWhite"/>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="V"
-                android:layout_marginTop="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:textSize="30sp"
-                android:layout_centerInParent="true"/>
-        </RelativeLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,20 +78,33 @@
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_osc"/>
             <ImageView
+                android:id="@+id/btn.pause"
                 android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_width"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_pause"/>
             <ImageView
+                android:id="@+id/btn.play"
                 android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_width"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_play"/>
             <ImageView
+                android:id="@+id/btn.setting"
                 android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_width"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_settings"/>
+            <ImageView
+                android:id="@+id/btn.second.screen"
+                android:clickable="true"
+                android:onClick="onClickHandle"
+                android:layout_width="@dimen/btn_width"
+                android:layout_height="@dimen/btn_size"
+                android:background="@drawable/button_on"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -93,22 +112,37 @@
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal">
             <ImageView
+                android:id="@+id/btn.connect"
                 android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_size"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_connect"/>
             <ImageView
+                android:id="@+id/btn.func"
                 android:clickable="true"
+                android:onClick="onClickHandle"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:background="@drawable/button_func"/>
+            <ImageView
+                android:id="@+id/btn.history"
+                android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_size"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_lista"/>
             <ImageView
+                android:id="@+id/btn.save"
                 android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_size"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_save"/>
             <ImageView
+                android:id="@+id/btn.r"
                 android:clickable="true"
+                android:onClick="onClickHandle"
                 android:layout_width="@dimen/btn_size"
                 android:layout_height="@dimen/btn_size"
                 android:background="@drawable/button_off"/>

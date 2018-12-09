@@ -61,19 +61,19 @@ public class DataRenderer extends Renderer {
     public void transform(Transformer transformer,float xScale, float yScale) {
         List<Entry> listData = mChart.getData();
         if(listData.size() == 0) return;
-        Entry first = listData.get(0);
 
-        for (int i = 1; i < listData.size(); i++){
+        for (int i = 0; i < listData.size(); i++){
             Entry entry = listData.get(i);
             entry.setX((int)(i * transformer.distanceBetweenPoints(xScale)));
         }
 
-        for (Entry entry : listData) {
+        for (int i = 0; i < listData.size(); i++){
+            Entry entry = listData.get(i);
             entry.setY(transformer.yAxisValueToPixel(entry.getY(), yScale));
         }
     }
 
-    public void translate(float speed) {
+    public void translateX(float speed) {
         List<Entry> listData = mChart.getData();
         for (int i = 1; i < listData.size(); i++){
             Entry entry = listData.get(i);

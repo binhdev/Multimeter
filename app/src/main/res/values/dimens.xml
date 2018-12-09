@@ -10,8 +10,14 @@
 
     <dimen name="layout_margin">10.0dip</dimen>
     <dimen name="main_button_size">180.0dip</dimen>
-    <dimen name="btn_size">48.0dip</dimen>
-    <dimen name="btn_width">64.0dip</dimen>
+    <dimen name="btn_size">40.0dip</dimen>
+    <dimen name="btn_width">60.0dip</dimen>
+
+
+    <dimen name="layout_padding">8dip</dimen>
+    <dimen name="widget_padding">8dip</dimen>
+    <dimen name="item_padding">16dp</dimen>
+    <dimen name="item_height">48dp</dimen>
 </resources>
 
 

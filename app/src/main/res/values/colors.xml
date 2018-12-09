@@ -10,7 +10,10 @@
     <color name="background_status_bar">#ff000000</color>
 
     <color name="colorWhite">#FFF</color>
+    <color name="colorBlack">#000000</color>
     <color name="colorWaveFrame">#ff393e41</color>
     <color name="colorChart">#000000</color>
     <color name="transparent">#00000000</color>
+
+    <color name="colorDivider">#bfc1ad</color>
 </resources>

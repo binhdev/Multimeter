@@ -1,13 +1,10 @@
 package net.multimeter.iot.activity;
 
-import android.graphics.PointF;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import net.multimeter.iot.R;
-import net.multimeter.iot.adc.data.AdcData;
 import net.multimeter.iot.adc.data.CircularBuffer;
 import net.multimeter.iot.adc.data.DataPoint;
 import net.multimeter.iot.chart.RealtimeChart;
@@ -20,13 +17,11 @@ import net.multimeter.iot.chart.utils.Helper;
 import net.multimeter.iot.chart.utils.Utils;
 import net.multimeter.iot.adc.producer.DataProcessor;
 import net.multimeter.iot.adc.producer.UdpUnicastClient;
-import net.multimeter.iot.utils.Constants;
+import net.multimeter.iot.utils.AppConstants;
 import net.multimeter.iot.views.ZeroLine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -111,13 +106,13 @@ public class GraphActivity extends BaseActivity {
         });
 
         List<Entry> entryList = new ArrayList<>();
-        circularBuffer = new CircularBuffer(100000);
+        circularBuffer = new CircularBuffer(AppConstants.QUEUE_BUFFER);
         circularBuffer.setStep(100);
-        client = new UdpUnicastClient(Constants.SERVER_PORT, circularBuffer);
+        client = new UdpUnicastClient(AppConstants.SERVER_PORT, circularBuffer);
         dataProcessor = new DataProcessor(circularBuffer, dataPoints -> {
             entryList.clear();
-            for (DataPoint point : dataPoints) {
-                Entry entry = new Entry(point.index, value((int)point.value));
+            for (int i = 0; i < dataPoints.length; i++){
+                Entry entry = new Entry(dataPoints[i].index, Utils.convertDataToVolt((int)dataPoints[i].value));
                 entryList.add(entry);
             }
             mRealtimeChart.setData(entryList);
@@ -163,7 +158,14 @@ public class GraphActivity extends BaseActivity {
         }
     }
 
-    private float value(int e){
-        return Utils.convertDataToVolt(e);
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(client != null)
+            client.stop();
+        if(dataProcessor != null)
+            dataProcessor.stop();
+
+        mExecutorService.shutdown();
     }
 }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/btn.back"
+            android:onClick="onClickHandle"
+            android:src="@drawable/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:text="Settings"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"/>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingLeft="@dimen/item_padding"
+        android:paddingRight="@dimen/item_padding">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".activity.SettingActivity"
+            android:orientation="vertical">
+            <!--Begin wifi setting-->
+            <include layout="@layout/setting_connect"/>
+            <!--End wifi setting-->
+
+            <!--Begin setting display-->
+            <include layout="@layout/setting_display"/>
+            <!--End wifi setting-->
+
+            <!--Begin setting display-->
+            <include layout="@layout/setting_graph"/>
+            <!--End wifi setting-->
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import net.multimeter.iot.adc.data.DataPoint;
 import net.multimeter.iot.chart.data.Entry;
 import net.multimeter.iot.chart.units.TimeBase;
 import net.multimeter.iot.chart.units.VoltBase;
@@ -56,6 +57,19 @@ public class Utils {
 
     public static int getAmountPointFromXAxisScale(float scale) {
         return (int)(Constants.NUMBER_POINT_PER_SECOND * scale) * ViewPortHandler.XAXIS_UNIT;
+    }
+
+    public static short[] findMinMaxValue(DataPoint[] dataPoints) {
+        short min = dataPoints[0].value;
+        short max = dataPoints[0].value;
+        for(int i=0; i < dataPoints.length; i++){
+            if(dataPoints[i].value > max)
+                max = dataPoints[i].value;
+            if(dataPoints[i].value < min)
+                min = dataPoints[0].value;
+        }
+        short rs[] = {min, max};
+        return rs;
     }
 
     public static int getSDKInt() {

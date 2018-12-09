@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:background="@color/colorDivider"
+            android:layout_gravity="center_vertical"/>
+        <TextView
+            android:text="@string/lb_setting_display"
+            style="@style/setting_label"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="1dp"
+            android:background="@color/colorDivider"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="Input"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:gravity="center_vertical"/>
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:hint="1"
+            android:inputType="number"/>
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"></Spinner>
+    </LinearLayout>
+    <TextView
+        android:text="Output"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="@dimen/item_height"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/item_padding"
+        android:orientation="vertical">
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:text="Pressure (Pa)"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/item_height"/>
+            <RadioButton
+                android:text="Temparature (C)"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/item_height"/>
+        </RadioGroup>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:text="Convertion Factor"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="@color/colorBlack"
+                android:layout_height="@dimen/item_height"/>
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="@dimen/item_height"
+                android:inputType="numberDecimal"
+                android:hint="0.0"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
